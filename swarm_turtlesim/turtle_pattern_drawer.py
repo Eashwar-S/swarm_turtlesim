@@ -6,11 +6,13 @@ from geometry_msgs.msg import Twist
 from turtlesim.srv import SetPen
 from turtlesim.msg import Pose
 import math
+import time
 
 class TurtlePatternDrawer(Node):
     def __init__(self):
         super().__init__('turtle_pattern_drawer')
         
+        self.start_time = time.time()
         # Publisher
         self.cmd_vel_pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
         
@@ -63,7 +65,7 @@ class TurtlePatternDrawer(Node):
         self.current_waypoint_idx = 0  # Index within the current letter's waypoints
         self.is_drawing = False  # Track if pen is drawing
         self.pen_down = False  # Track pen state
-        self.waypoint_distance_threshold = 0.15 # Threshold to determine a waypoint is reached
+        self.waypoint_distance_threshold = 0.05 # Threshold to determine a waypoint is reached
         self.angular_velocity_set = False
         # Background color (blue: RGB = 0, 0, 255)
         self.background_r = 0
@@ -77,23 +79,30 @@ class TurtlePatternDrawer(Node):
         """Callback for /turtle1/pose to track turtle position."""
         self.current_pose = msg
         # Check if turtle reached the next waypoint
-        if self.current_pose and self.is_drawing:
+        if self.current_pose and self.current_letter_idx < len(self.waypoints):
             target_x, target_y = self.waypoints[self.current_letter_idx][self.current_waypoint_idx]
             self.get_logger().info(f'target_x - {target_x}, target_y - {target_y}')
             distance = math.sqrt((self.current_pose.x - target_x)**2 + (self.current_pose.y - target_y)**2)
             self.get_logger().info(f'distance - {distance}')
+
+            if self.current_waypoint_idx  == 0:
+                self.is_drawing = False
+            else:
+                self.is_drawing = True  # Start drawing the next segment
+
             if distance < self.waypoint_distance_threshold:  # Threshold for reaching waypoint
                 self.current_waypoint_idx += 1
-                self.angular_velocity_set = False
                 if self.current_waypoint_idx >= len(self.waypoints[self.current_letter_idx]):
                     self.current_waypoint_idx = 0
                     self.current_letter_idx += 1
                     self.is_drawing = False  # Stop drawing after finishing a letter
                     if self.current_letter_idx >= len(self.waypoints):
                         self.get_logger().info("Pattern completed!")
+                        end = time.time()
+                        self.get_logger().info(f'Total time to draw the pattern - {end - self.start_time} seconds')
                         self.destroy_timer(self.timer)  # Stop the timer
                         return
-                self.is_drawing = True  # Start drawing the next segment
+                
 
     def calculate_velocities(self, target_x, target_y):
         """Calculate linear and angular velocities to move to target."""
@@ -115,23 +124,25 @@ class TurtlePatternDrawer(Node):
         distance = math.sqrt(dx**2 + dy**2)
         
         # Desired angle to target
-        desired_theta = math.atan(dy, dx)
+        desired_theta = math.atan2(dy, dx)
         
         # Angular velocity (turn towards target)
         # if not self.angular_velocity_set:
-        angular_vel = 0.1 * (desired_theta - current_theta)
-        
-        # if abs(angular_vel) < 0.03:
-            # self.angular_velocity_set = True
-        # if angular_vel > math.pi:
-        #     angular_vel -= 2 * math.pi
-        # elif angular_vel < -math.pi:
-        #     angular_vel += 2 * math.pi
-        
+        angle_error = desired_theta - current_theta
+        angle_error = math.atan2(math.sin(angle_error), math.cos(angle_error))
+
+        # Proportional gains (tune to your needs)
+        Kp_angular = 0.5
+        Kp_linear = 0.2
+    
         # Linear velocity (move forward)
         # if self.angular_velocity_set:
-        linear_vel = 0.1 * distance  if abs(angular_vel) < 0.1 else 0.0  # Only move forward if nearly aligned
-        self.get_logger().info(f'linear velocity - {linear_vel}, angualar velocity - {angular_vel}')
+
+        # Calculate angular velocity
+        angular_vel = Kp_angular * angle_error
+
+        linear_vel = Kp_linear * distance  if abs(angle_error) < 0.1 else 0.0  # Only move forward if nearly aligned
+        self.get_logger().info(f'linear velocity - {linear_vel}, angualar velocity - {angular_vel}, angle error - {angle_error}')
         return linear_vel, angular_vel
 
     def set_pen(self, r, g, b, width=2, off=False):
@@ -181,15 +192,16 @@ class TurtlePatternDrawer(Node):
             self.cmd_vel_pub.publish(twist_msg)
         
         # Start drawing if not already drawing and at the start of a letter
-        if not self.is_drawing and self.current_waypoint_idx == 0:
-            distance = math.sqrt((self.current_pose.x - target_x)**2 + (self.current_pose.y - target_y)**2)
-            self.get_logger().info(f'target_x - {target_x}, target_y - {target_y}')
-            self.get_logger().info(f'current_x - {self.current_pose.x}, current_y - {self.current_pose.y}')
-            self.get_logger().info(f'distance - {distance}')
-            if distance < self.waypoint_distance_threshold:
-                self.is_drawing = True
+        # if not self.is_drawing and self.current_waypoint_idx == 0:
+        #     distance = math.sqrt((self.current_pose.x - target_x)**2 + (self.current_pose.y - target_y)**2)
+        #     self.get_logger().info(f'target_x - {target_x}, target_y - {target_y}')
+        #     self.get_logger().info(f'current_x - {self.current_pose.x}, current_y - {self.current_pose.y}')
+        #     self.get_logger().info(f'distance - {distance}')
+        #     if distance < self.waypoint_distance_threshold:
+        #         self.is_drawing = True
 
 def main(args=None):
+    
     rclpy.init(args=args)
     node = TurtlePatternDrawer()
     rclpy.spin(node)
