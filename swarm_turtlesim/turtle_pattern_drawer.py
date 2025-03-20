@@ -1,4 +1,4 @@
-# #!/usr/bin/env python3
+#!/usr/bin/env python3
 
 # import rclpy
 # from rclpy.node import Node
@@ -46,19 +46,19 @@
 #         #     [(8.5, 3), (8.5, 5), (9.1, 5), (9.1, 3), (8.5, 3)]   # S
 #         # ]
         
-        # self.waypoints = [[(2.4, 8), (1.5, 8), (1.5, 7), (2.4, 7), (2.4, 6), (1.5, 6)],
-        #                   [(2.8, 8), (3.25, 6), (3.6999999999999997, 8), (4.15, 6), (4.6, 8)],
-        #                   [(4.6, 6), (5.3, 8), (6.0, 6), (5.6499999999999995, 7), (4.949999999999999, 7)],
-        #                   [(6.4, 6), (6.4, 8), (7.300000000000001, 8), (7.300000000000001, 7), (6.4, 7), (7.300000000000001, 6)],
-        #                   [(8.2, 6), (8.2, 8), (9.1, 7), (10.0, 8), (10.0, 6)],
-        #                   [(1.0, 3), (1.0, 5), (1.9, 5), (1.9, 4), (1.0, 4), (1.9, 3)],
-        #                   [(2.2, 3), (2.2, 5), (3.2, 5), (3.2, 3), (2.2, 3)],
-        #                   [(3.4, 3), (3.4, 5), (4.4, 5), (4.4, 4), (3.4, 4), (4.4, 4), (4.4, 3), (3.4, 3)],
-        #                   [(4.6, 3), (4.6, 5), (5.6, 5), (5.6, 3), (4.6, 3)],
-        #                   [(6.3999999999999995, 3), (6.3999999999999995, 5), (5.8, 5), (7.0, 5)],
-        #                   [(7.6, 3), (7.6, 5)],
-        #                   [(8.799999999999999, 5), (8.2, 5), (8.2, 3), (8.799999999999999, 3)],
-        #                   [(10.3, 5), (9.4, 5), (9.4, 4), (10.3, 4), (10.3, 3), (9.4, 3)]]
+#         self.waypoints = [[(2.4, 8), (1.5, 8), (1.5, 7), (2.4, 7), (2.4, 6), (1.5, 6)],
+#                           [(2.8, 8), (3.25, 6), (3.6999999999999997, 8), (4.15, 6), (4.6, 8)],
+#                           [(4.6, 6), (5.3, 8), (6.0, 6), (5.6499999999999995, 7), (4.949999999999999, 7)],
+#                           [(6.4, 6), (6.4, 8), (7.300000000000001, 8), (7.300000000000001, 7), (6.4, 7), (7.300000000000001, 6)],
+#                           [(8.2, 6), (8.2, 8), (9.1, 7), (10.0, 8), (10.0, 6)],
+#                           [(1.0, 3), (1.0, 5), (1.9, 5), (1.9, 4), (1.0, 4), (1.9, 3)],
+#                           [(2.2, 3), (2.2, 5), (3.2, 5), (3.2, 3), (2.2, 3)],
+#                           [(3.4, 3), (3.4, 5), (4.4, 5), (4.4, 4), (3.4, 4), (4.4, 4), (4.4, 3), (3.4, 3)],
+#                           [(4.6, 3), (4.6, 5), (5.6, 5), (5.6, 3), (4.6, 3)],
+#                           [(6.3999999999999995, 3), (6.3999999999999995, 5), (5.8, 5), (7.0, 5)],
+#                           [(7.6, 3), (7.6, 5)],
+#                           [(8.799999999999999, 5), (8.2, 5), (8.2, 3), (8.799999999999999, 3)],
+#                           [(10.3, 5), (9.4, 5), (9.4, 4), (10.3, 4), (10.3, 3), (9.4, 3)]]
 #         # State variables
 #         self.current_letter_idx = 0  # Index of the current letter
 #         self.current_waypoint_idx = 0  # Index within the current letter's waypoints
@@ -211,220 +211,6 @@
 #     main()
 
 
-#!/usr/bin/env python3
-
-# import sys
-# import rclpy
-# from rclpy.node import Node
-# from geometry_msgs.msg import Twist
-# from turtlesim.srv import SetPen, Spawn
-# from turtlesim.msg import Pose
-# import math
-# import time
-
-# class TurtlePatternDrawer(Node):
-#     def __init__(self, waypoints, turtle_name='turtle1'):
-#         super().__init__(f'turtle_pattern_drawer_{turtle_name}')
-#         self.turtle_name = turtle_name
-        
-#         self.start_time = time.time()
-#         # Publisher for cmd_vel specific to this turtle
-#         self.cmd_vel_pub = self.create_publisher(Twist, f'/{self.turtle_name}/cmd_vel', 10)
-        
-#         # Subscriber for pose specific to this turtle
-#         self.pose_sub = self.create_subscription(Pose, f'/{self.turtle_name}/pose', self.pose_callback, 10)
-        
-#         # Client for the set_pen service specific to this turtle
-#         self.pen_client = self.create_client(SetPen, f'/{self.turtle_name}/set_pen')
-#         while not self.pen_client.wait_for_service(timeout_sec=1.0):
-#             self.get_logger().info(f'Service /{self.turtle_name}/set_pen not available, waiting...')
-        
-#         # Store current pose
-#         self.current_pose = None
-        
-#         # Waypoints for pattern drawing (this is an example)
-#         self.waypoints = waypoints
-#         # self.waypoints = [
-#         #     [(2.4, 8), (1.5, 8), (1.5, 7), (2.4, 7), (2.4, 6), (1.5, 6)],
-#         #     [(2.8, 8), (3.25, 6), (3.7, 8), (4.15, 6), (4.6, 8)]
-#         # ]
-        
-#         # State variables for drawing
-#         self.current_letter_idx = 0  # Index of the current letter
-#         self.current_waypoint_idx = 0  # Index within the current letter's waypoints
-#         self.is_drawing = False  # Track if pen is drawing
-#         self.pen_down = False  # Track pen state
-#         self.waypoint_distance_threshold = 0.05 # Threshold to determine a waypoint is reached
-        
-#         # Background color (blue: RGB = 0, 0, 255)
-#         self.background_r = 0
-#         self.background_g = 0
-#         self.background_b = 255
-        
-#         # Start drawing after receiving initial pose
-#         self.timer = self.create_timer(0.1, self.draw_pattern)  # Check every 0.1 seconds
-
-#     def pose_callback(self, msg):
-#         """Callback for pose to track turtle position."""
-#         self.current_pose = msg
-#         if self.current_pose and self.current_letter_idx < len(self.waypoints):
-#             target_x, target_y = self.waypoints[self.current_letter_idx][self.current_waypoint_idx]
-#             distance = math.sqrt((self.current_pose.x - target_x)**2 + (self.current_pose.y - target_y)**2)
-#             self.get_logger().info(f'[{self.turtle_name}] target: ({target_x}, {target_y}) | current: ({self.current_pose.x:.2f}, {self.current_pose.y:.2f}) | distance: {distance:.2f}')
-
-#             # Decide whether to draw (pen down) or move (pen up)
-#             if self.current_waypoint_idx == 0:
-#                 self.is_drawing = False
-#             else:
-#                 self.is_drawing = True
-
-#             if distance < self.waypoint_distance_threshold:  # Reached waypoint
-#                 self.current_waypoint_idx += 1
-#                 if self.current_waypoint_idx >= len(self.waypoints[self.current_letter_idx]):
-#                     self.current_waypoint_idx = 0
-#                     self.current_letter_idx += 1
-#                     self.is_drawing = False
-#                     if self.current_letter_idx >= len(self.waypoints):
-#                         self.get_logger().info(f"[{self.turtle_name}] Pattern completed in {time.time() - self.start_time:.2f} seconds!")
-#                         self.destroy_timer(self.timer)
-#                         return
-
-#     def calculate_velocities(self, target_x, target_y):
-#         """Calculate linear and angular velocities to move to target."""
-#         if not self.current_pose:
-#             return 0.0, 0.0
-
-#         current_x = self.current_pose.x
-#         current_y = self.current_pose.y
-#         current_theta = self.current_pose.theta
-
-#         dx = target_x - current_x
-#         dy = target_y - current_y
-
-#         distance = math.sqrt(dx**2 + dy**2)
-#         desired_theta = math.atan2(dy, dx)
-#         angle_error = desired_theta - current_theta
-#         angle_error = math.atan2(math.sin(angle_error), math.cos(angle_error))
-
-#         # Here you could use dynamic gains as needed.
-#         Kp_angular = 0.5
-#         Kp_linear = 0.2
-
-#         angular_vel = Kp_angular * angle_error
-#         linear_vel = Kp_linear * distance if abs(angle_error) < 0.1 else 0.0
-#         self.get_logger().info(f"[{self.turtle_name}] linear_vel: {linear_vel:.2f}, angular_vel: {angular_vel:.2f}")
-#         return linear_vel, angular_vel
-
-#     def set_pen(self, r, g, b, width=2, off=False):
-#         """Set pen color and state."""
-#         request = SetPen.Request()
-#         request.r = r
-#         request.g = g
-#         request.b = b
-#         request.width = width
-#         request.off = off
-#         future = self.pen_client.call_async(request)
-#         return future
-
-#     def draw_pattern(self):
-#         """Main logic to draw the pattern letter by letter."""
-#         if not self.current_pose or self.current_letter_idx >= len(self.waypoints):
-#             return
-        
-#         target_x, target_y = self.waypoints[self.current_letter_idx][self.current_waypoint_idx]
-        
-#         if self.is_drawing:
-#             self.set_pen(255, 255, 255)  # White pen when drawing
-#         else:
-#             self.set_pen(self.background_r, self.background_g, self.background_b, off=True)
-        
-#         linear_vel, angular_vel = self.calculate_velocities(target_x, target_y)
-#         twist_msg = Twist()
-#         twist_msg.linear.x = linear_vel
-#         twist_msg.angular.z = angular_vel
-#         self.cmd_vel_pub.publish(twist_msg)
-
-# def spawn_turtles(num_turtles):
-#     """
-#     Spawns additional turtles in turtlesim (if num_turtles > 1).
-#     turtle1 exists by default.
-#     """
-#     # Create a temporary node to call the spawn service
-#     node = rclpy.create_node('turtle_spawner')
-#     spawn_client = node.create_client(Spawn, 'spawn')
-#     while not spawn_client.wait_for_service(timeout_sec=1.0):
-#         node.get_logger().info('Spawn service not available, waiting...')
-    
-#     # Spawn turtles from turtle2 up to turtleN
-#     for i in range(2, num_turtles + 1):
-#         request = Spawn.Request()
-#         # You can choose spawn positions arbitrarily; here we space them out
-#         request.x = 2.0 * i
-#         request.y = 2.0
-#         request.theta = 0.0
-#         request.name = f"turtle{i}"
-#         future = spawn_client.call_async(request)
-#         rclpy.spin_until_future_complete(node, future)
-#         if future.result() is not None:
-#             node.get_logger().info(f"Spawned turtle: {future.result().name}")
-#         else:
-#             node.get_logger().error("Failed to spawn turtle")
-#     node.destroy_node()
-
-# def main(args=None):
-#     rclpy.init(args=args)
-#     # Get number of turtles from command-line arguments (default: 1)
-#     num_turtles = 1
-#     waypoints = [[(2.4, 8), (1.5, 8), (1.5, 7), (2.4, 7), (2.4, 6), (1.5, 6)],
-#                           [(2.8, 8), (3.25, 6), (3.6999999999999997, 8), (4.15, 6), (4.6, 8)],
-#                           [(4.6, 6), (5.3, 8), (6.0, 6), (5.6499999999999995, 7), (4.949999999999999, 7)],
-#                           [(6.4, 6), (6.4, 8), (7.300000000000001, 8), (7.300000000000001, 7), (6.4, 7), (7.300000000000001, 6)],
-#                           [(8.2, 6), (8.2, 8), (9.1, 7), (10.0, 8), (10.0, 6)],
-#                           [(1.0, 3), (1.0, 5), (1.9, 5), (1.9, 4), (1.0, 4), (1.9, 3)],
-#                           [(2.2, 3), (2.2, 5), (3.2, 5), (3.2, 3), (2.2, 3)],
-#                           [(3.4, 3), (3.4, 5), (4.4, 5), (4.4, 4), (3.4, 4), (4.4, 4), (4.4, 3), (3.4, 3)],
-#                           [(4.6, 3), (4.6, 5), (5.6, 5), (5.6, 3), (4.6, 3)],
-#                           [(6.3999999999999995, 3), (6.3999999999999995, 5), (5.8, 5), (7.0, 5)],
-#                           [(7.6, 3), (7.6, 5)],
-#                           [(8.799999999999999, 5), (8.2, 5), (8.2, 3), (8.799999999999999, 3)],
-#                           [(10.3, 5), (9.4, 5), (9.4, 4), (10.3, 4), (10.3, 3), (9.4, 3)]]
-#     if len(sys.argv) > 1:
-#         try:
-#             num_turtles = int(sys.argv[1])
-#         except ValueError:
-#             print("Invalid num_turtles argument. Using default value 1.")
-#             num_turtles = 1
-
-#     # Spawn additional turtles if needed (turtle1 is already present)
-#     if num_turtles > 1:
-#         spawn_turtles(num_turtles)
-
-#     # For demonstration, we create a pattern drawer for each turtle.
-#     # In a more complex system you might run them in separate threads or nodes.
-#     drawers = []
-#     for i in range(1, num_turtles + 1):
-#         turtle_name = f"turtle{i}"
-#         # Assign waypoints based on auction algorithm
-#         node = TurtlePatternDrawer(waypoints=waypoints[0] ,turtle_name=turtle_name)
-#         drawers.append(node)
-
-#     # Use a multi-threaded executor to spin all the nodes concurrently.
-#     executor = rclpy.executors.MultiThreadedExecutor()
-#     for node in drawers:
-#         executor.add_node(node)
-
-#     try:
-#         executor.spin()
-#     except KeyboardInterrupt:
-#         pass
-
-#     # Clean up
-#     for node in drawers:
-#         node.destroy_node()
-#     rclpy.shutdown()
-
-# if __name__ == '__main__':
-#     main()
 
 #!/usr/bin/env python3
 
@@ -484,6 +270,7 @@ class RobotInfo:
         self.x = init_x
         self.y = init_y
         self.assigned_tasks = []
+        self.robot_cost_so_far = 0.0
 
     def cost_to_do_task(self, task: Task) -> float:
         """
@@ -526,23 +313,32 @@ def auction_allocation(robots: List[RobotInfo], tasks: List[Task],
 
             # Evaluate cost + price for each task
             for task in tasks:
-                cost = robot.cost_to_do_task(task)
-                score = cost + task.price
-                if score < best_score:
-                    second_best_score = best_score
-                    best_score = score
-                    best_task = task
-                elif score < second_best_score:
-                    second_best_score = score
+                # if task.id in unassigned:
+                    cost = robot.cost_to_do_task(task)
+                    score =  cost + task.price + robot.robot_cost_so_far
+                    if score < best_score:
+                        second_best_score = best_score
+                        best_score = score
+                        best_task = task
+                    elif score < second_best_score:
+                        second_best_score = score
 
             if best_task is not None:
-                increment = (second_best_score - best_score) + epsilon
-                new_bid = best_task.price + increment
+                if robot.robot_cost_so_far == 0.0:
+                    increment = (second_best_score - best_score) + epsilon
+                else:
+                    increment = ((second_best_score - best_score) + epsilon)/robot.robot_cost_so_far
+                # if robot.robot_cost_so_far == 0.0:
+                #     new_bid = best_task.price + increment
+                # else:
+                new_bid = (best_task.price + increment) #- robot.robot_cost_so_far
                 robot_bids.append((robot.id, best_task.id, new_bid))
 
+        print(f'round - {round_num}')
+        # print(robot_bids)
         if not robot_bids:
             break
-
+        
         # Step 2: Group bids by task, pick highest
         bids_by_task = {}
         for (r_id, t_id, bid_val) in robot_bids:
@@ -550,6 +346,7 @@ def auction_allocation(robots: List[RobotInfo], tasks: List[Task],
                 bids_by_task[t_id] = []
             bids_by_task[t_id].append((r_id, bid_val))
 
+        # print(f'bids by task - {bids_by_task}')
         changed = False
         for t_id, bid_list in bids_by_task.items():
             best_bid_val = task_dict[t_id].price
@@ -560,8 +357,19 @@ def auction_allocation(robots: List[RobotInfo], tasks: List[Task],
                     best_bidder = r_id
             if best_bidder is not None:
                 # Reassign
-                task_dict[t_id].assigned_robot = best_bidder
-                task_dict[t_id].price = best_bid_val
+                assigned_task = task_dict[t_id]
+                assigned_task.assigned_robot = best_bidder
+                assigned_task.price = best_bid_val
+
+                winner_robot = robots[best_bidder]
+
+                # print(f'Assigning task {assigned_task.id} to robot {best_bidder}')
+                # ACCUMULATE the new cost
+                winner_robot.robot_cost_so_far += winner_robot.cost_to_do_task(assigned_task)
+                # Update the robot's position to the last waypoint in the letter
+                last_x, last_y = assigned_task.waypoints[-1]
+                winner_robot.x = last_x
+                winner_robot.y = last_y
                 changed = True
 
         # Remove assigned tasks from unassigned
@@ -625,6 +433,7 @@ class TurtlePatternDrawer(Node):
         self.bg_r = 0
         self.bg_g = 0
         self.bg_b = 255
+
 
     def pose_callback(self, msg: Pose):
         self.current_pose = msg
@@ -708,8 +517,8 @@ def spawn_turtles(num_robots: int):
     for i in range(2, num_robots + 1):
         req = Spawn.Request()
         # place them at random
-        req.x = float(random.randint(1, 10))
-        req.y = float(random.randint(1, 8))
+        req.x = float(random.randint(2, 10))
+        req.y = float(random.randint(3, 8))
         req.theta = 0.0
         req.name = f"turtle{i}"
         future = cli.call_async(req)
@@ -743,6 +552,7 @@ def main(args=None):
         [(10.3, 5), (9.4, 5), (9.4, 4), (10.3, 4), (10.3, 3), (9.4, 3)], # S
     ]
 
+    letters_list = ['S', 'W', 'A', 'R', 'M', 'R', 'O', 'B', 'O', 'T', 'I', 'C', 'S']
     tasks = []
     for i, wpts in enumerate(full_waypoints):
         tasks.append(Task(letter_id=i, waypoints=wpts))
@@ -792,12 +602,15 @@ def main(args=None):
         robots.append(RobotInfo(robot_id=i, init_x=rx, init_y=ry))
 
     # 6) Run Auction
-    assigned_tasks = auction_allocation(robots, tasks, epsilon=0.01, max_rounds=200)
+    assigned_tasks = auction_allocation(robots, tasks, epsilon=100.0, max_rounds=200)
 
     print("\n*** Final Auction Results ***")
+    
     for r in robots:
-        print(f"Robot {r.id+1} -> Letters {[t.id for t in r.assigned_tasks]}")
+        print(f"Robot {r.id+1} -> Letters {[letters_list[t.id]for t in r.assigned_tasks]} -> Distance travelled {r.robot_cost_so_far}")
 
+    print()    
+    print(f'Max of all distances - {max([r.robot_cost_so_far for r in robots])}')
     # 7) Start TurtlePatternDrawer for each robot with assigned letters
     #    This means we pass only the waypoints for the tasks it won
     #    We'll do it in a single process with MultiThreadedExecutor
@@ -807,14 +620,14 @@ def main(args=None):
         # We can just chain them, or do them in sequence letter by letter
         # E.g. if you want them to do letter 0, then letter 5, etc. in that order
         # We'll do it in ascending task.id order for convenience
-        r.assigned_tasks.sort(key=lambda t: t.id)
+        print(f'robot id - {r.id}, assigned tasks - {[t.id for t in r.assigned_tasks]}')
+        # r.assigned_tasks.sort(key=lambda t: t.id)
         combined_waypoints = []
         for t in r.assigned_tasks:
             combined_waypoints.append(t.waypoints)
 
         # If the robot got no tasks, then it will have an empty pattern
         turtle_name = f"turtle{r.id+1}"
-        print(turtle_name, combined_waypoints)
         drawer_node = TurtlePatternDrawer(turtle_name, combined_waypoints)
         drawers.append(drawer_node)
 
