@@ -63,7 +63,7 @@ This repository contains a **ROS 2** package called `swarm_turtlesim`, showcasin
 
 For a detailed explanation of the **auction-based** multi-robot approach, performance graphs, and examples, check out the accompanying blog post:
 
-[**Swarm Robots – A Gentle Introduction**]([https://your-blog-link.com/swarm-robots-intro](https://www.eashwarsathyamurthy.com/post/swarm-robotics-a-gentle-introduction))
+[**Swarm Robots – A Gentle Introduction**](https://www.eashwarsathyamurthy.com/post/swarm-robotics-a-gentle-introduction)
 
 
 
